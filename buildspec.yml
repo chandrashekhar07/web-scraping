@@ -1,0 +1,32 @@
+version: 0.2
+
+env:
+  variables:
+    NPM_CONFIG_UNSAFE_PERM: "true"
+
+phases:
+  install:
+    commands:
+      - echo Install phase started on `date`...
+      - npm install
+      - echo Install phase completed on `date`...
+  pre_build:
+    commands:
+      - echo Pre-Build = Build started on `date`
+  build:
+    commands:
+      - echo Build phase started on `date`...
+      - npm run build
+      - echo Build phase completed on `date`...
+      # - zip -r blushrush-dev.zip dist/* .ebextensions package.json
+  post_build:
+    commands:
+      - echo Post-Build phase started on `date`...
+      - npm run migration:generate
+      - npm run migration:run
+      - echo Post-Build phase completed on `date`...
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: dist
